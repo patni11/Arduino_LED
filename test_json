@@ -1,0 +1,30 @@
+import time
+import json
+import serial
+from pprint import pprint
+import random
+
+if __name__ == "__main__":
+    print ("Ready...")
+    ser  = serial.Serial("COM3", baudrate= 9600, 
+           timeout=2.5, 
+           parity=serial.PARITY_NONE, 
+           bytesize=serial.EIGHTBITS, 
+           stopbits=serial.STOPBITS_ONE
+        )
+    data = {"anger": {"vals": 42, "color": 29}, "anticipation": {"vals": 60, "color": 54}, "joy": {"vals": 48, "color": 74}, "trust": {"vals": 24, "color": 73}, "fear": {"vals": 24, "color": 90}, "surprise": {"vals": 42, "color": 128}, "sadness": {"vals": 18, "color": 200}, "disgust": {"vals": 36, "color": 233}}
+
+    data=json.dumps(data)
+    print (data)
+    if ser.isOpen():
+        ser.write(data.encode('ascii'))
+        ser.flush()
+        try:
+            incoming = ser.readline().decode("utf-8")
+            print (incoming)
+        except Exception as e:
+            print (e)
+            pass
+        ser.close()
+    else:
+        print ("opening error")
